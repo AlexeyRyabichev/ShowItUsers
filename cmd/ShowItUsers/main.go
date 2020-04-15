@@ -18,7 +18,7 @@ func main() {
 
 	if nodeCfg.Token == "" {
 		if err := nodeCfg.RegisterNode(); err != nil {
-			log.Fatalf("Cannot register node: %s", err)
+			log.Fatalf("Cannot register node: %v", err)
 		}
 
 		if err := nodeCfg.SaveCfgToJSON(cfgFile); err != nil {

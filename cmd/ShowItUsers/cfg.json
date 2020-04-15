@@ -1,9 +1,21 @@
 {
-  "gateways": {
-    "name": "Post user",
-    "method": "POST",
-    "path": "/aka"
-  },
+  "gateways": [
+    {
+      "name": "Post user login info",
+      "method": "POST",
+      "path": "/"
+    },
+    {
+      "name": "Get user login info",
+      "method": "GET",
+      "path": "/"
+    },
+    {
+      "name": "Get user account info",
+      "method": "GET",
+      "path": "/info"
+    }
+  ],
   "name": "Users node",
   "base": "/v1/user",
   "host": "127.0.0.1:7054",
