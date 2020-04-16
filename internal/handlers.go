@@ -8,10 +8,6 @@ import (
 )
 
 func (rt *Router) PostUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
-}
-
-func (rt *Router) GetUser(w http.ResponseWriter, r *http.Request) {
 	//key := r.Header.Get("X-Token")
 	//
 	//if key != rt.cfg.Token {
@@ -31,6 +27,10 @@ func (rt *Router) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	//fmt.Fprintf(w, "Hello World!")
+}
+
+func (rt *Router) GetUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello World!")
 }
 
 func (rt *Router) GetUserInfo(w http.ResponseWriter, r *http.Request) {
