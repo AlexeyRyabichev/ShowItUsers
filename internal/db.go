@@ -26,7 +26,7 @@ func IsUserExists(user *User) bool {
 	connStr := fmt.Sprintf("user=%s password=%s dbname=showit sslmode=disable", username, password)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("%v", err)
 	}
 	defer db.Close()
 
@@ -48,7 +48,7 @@ func IsUserLoginOrEmailExists(user *User) bool {
 	connStr := fmt.Sprintf("user=%s password=%s dbname=showit sslmode=disable", username, password)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("%v", err)
 	}
 	defer db.Close()
 
@@ -64,6 +64,32 @@ func IsUserLoginOrEmailExists(user *User) bool {
 	} else {
 		return false
 	}
+}
+
+func InsertUser(user *User) bool {
+	connStr := fmt.Sprintf("user=%s password=%s dbname=showit sslmode=disable", username, password)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Printf("%v", err)
+	}
+	defer db.Close()
+
+	query := fmt.Sprintf("insert into users (login, email, password, first_name, last_name) values (%s, %s, %s, %s, %s)", user.Login, user.Email, user.Password, user.FirstName, user.LastName)
+
+	result, err := db.Exec(query)
+	if err != nil {
+		log.Printf("%v", err)
+		return false
+	}
+
+	rows, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("%v", err)
+		return false
+	}
+
+	log.Printf("%s user inserted, rows affected: %d", user.Login, rows)
+	return true
 }
 
 //func Upload(filename *FileName) {

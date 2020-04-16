@@ -40,10 +40,14 @@ func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%s, %s", user.Login, user.Email)
 
 	if IsUserLoginOrEmailExists(&user) {
+		w.WriteHeader(http.StatusNotAcceptable)
+	}
+
+	if InsertUser(&user) {
 		w.WriteHeader(http.StatusCreated)
 	}
 
-	w.WriteHeader(http.StatusNotAcceptable)
+	w.WriteHeader(http.StatusInternalServerError)
 }
 
 func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
