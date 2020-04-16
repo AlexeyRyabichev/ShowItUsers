@@ -18,6 +18,8 @@ func (wc *WriteCounter) Write(p []byte) (int, error) {
 	return n, nil
 }
 
+//func GetUser()
+
 //func Upload(filename *FileName) {
 //	log.Printf("%s upload started", filename.FileName())
 //

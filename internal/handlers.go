@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (rt *Router) PostUser(w http.ResponseWriter, r *http.Request) {
+func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 	//key := r.Header.Get("X-Token")
 	//
 	//if key != rt.cfg.Token {
@@ -15,24 +15,21 @@ func (rt *Router) PostUser(w http.ResponseWriter, r *http.Request) {
 	//	return
 	//}
 
-	var req map[string]string
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	var user User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	for key, value := range req {
-		log.Printf("%s: %s", key, value)
-	}
+	log.Printf("%s, %s", user.Login, user.Password)
 
 	w.WriteHeader(http.StatusOK)
-	//fmt.Fprintf(w, "Hello World!")
 }
 
-func (rt *Router) GetUser(w http.ResponseWriter, r *http.Request) {
+func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World!")
 }
 
-func (rt *Router) GetUserInfo(w http.ResponseWriter, r *http.Request) {
+func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello World!")
 }

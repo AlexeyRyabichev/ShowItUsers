@@ -30,19 +30,19 @@ func NewRouter(cfg ShowItGate.NodeCfg) *Router {
 			Name:        "Get user login info",
 			Method:      "POST",
 			Pattern:     "/v1/user/login",
-			HandlerFunc: router.PostUser,
+			HandlerFunc: router.PostUserLogin,
 		},
 		{
 			Name:        "Register user login info",
 			Method:      "POST",
 			Pattern:     "/v1/user/signup",
-			HandlerFunc: router.GetUser,
+			HandlerFunc: router.PostUserSignup,
 		},
 		{
 			Name:        "Get user account info",
 			Method:      "POST",
 			Pattern:     "/v1/user/info",
-			HandlerFunc: router.GetUserInfo,
+			HandlerFunc: router.PostUserInfo,
 		},
 	}
 	router.initRouter()
