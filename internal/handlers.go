@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -56,5 +55,13 @@ func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+	var user User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("%v", user)
+
+	w.WriteHeader(http.StatusOK)
 }
