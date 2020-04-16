@@ -23,7 +23,11 @@ func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("%s, %s", user.Login, user.Password)
 
-	w.WriteHeader(http.StatusOK)
+	if IsUserExists(&user) {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	w.WriteHeader(http.StatusUnauthorized)
 }
 
 func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
