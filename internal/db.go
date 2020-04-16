@@ -74,7 +74,8 @@ func InsertUser(user *User) bool {
 	}
 	defer db.Close()
 
-	query := fmt.Sprintf("insert into users (login, email, password, first_name, last_name) values (%s, %s, %s, %s, %s)", user.Login, user.Email, user.Password, user.FirstName, user.LastName)
+	query := fmt.Sprintf("insert into users (login, email, password, first_name, last_name) values ('%s', '%s', '%s', '%s', '%s')", user.Login, user.Email, user.Password, user.FirstName, user.LastName)
+	log.Print(query)
 
 	result, err := db.Exec(query)
 	if err != nil {
