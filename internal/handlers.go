@@ -66,10 +66,19 @@ func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if GetUserInfo(&user){
+	userFromDB := GetUserInfo(&user)
+	if userFromDB.Login != "" {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	userFromDB.Password = ""
+	js, err := json.Marshal(userFromDB)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }

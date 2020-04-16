@@ -30,14 +30,16 @@ func GetUserInfo(user *User) User {
 	}
 	defer db.Close()
 
-	var userFromDB string
-	err = db.QueryRow(fmt.Sprintf(`select (login, first_name, last_name, total_series, total_seen_episodes, total_unseen_episodes, total_seen_movies, total_unseen_movies, total_time_spent, year_activity) from users where login='%s'`, user.Login)).Scan(&userFromDB)
-	//err = db.QueryRow(fmt.Sprintf(`select (login, first_name, last_name, total_series, total_seen_episodes, total_unseen_episodes, total_seen_movies, total_unseen_movies, total_time_spent, year_activity) from users where login='%s' and password='%s'`, user.Login, user.FirstName, user.LastName, user.TotalSeries, user.TotalSeenEpisodes, user.TotalUnseenEpisodes, user.TotalSeenMovies, user.TotalUnseenMovies, user.TotalTimeSpent, user.YearActivity)).Scan(&userFromDB)
+	var userFromDB User
+	query := fmt.Sprintf("select * from users where login = '%s'", user.Login)
+	row := db.QueryRow(query)
+	err = row.Scan(&userFromDB.Login, &userFromDB.Email, &userFromDB.Password, &userFromDB.FirstName, &userFromDB.LastName, &userFromDB.TotalSeries, &userFromDB.TotalSeenEpisodes, &userFromDB.TotalUnseenEpisodes, &userFromDB.TotalSeenMovies, &userFromDB.TotalUnseenMovies, &userFromDB.TotalTimeSpent, &userFromDB.YearActivity)
 	if err != nil {
 		log.Printf("cannot get user from db: %v", err)
 		return User{}
 	}
-	return User{}
+
+	return userFromDB
 }
 
 func IsUserExists(user *User) bool {
