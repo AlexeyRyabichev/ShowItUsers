@@ -44,6 +44,28 @@ func IsUserExists(user *User) bool {
 	}
 }
 
+func IsUserLoginOrEmailExists(user *User) bool {
+	connStr := fmt.Sprintf("user=%s password=%s dbname=showit sslmode=disable", username, password)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	var login string
+	err = db.QueryRow(fmt.Sprintf(`select login from users where login='%s' or email='%s'`, user.Login, user.Email)).Scan(&login)
+	if err != nil {
+		log.Printf("cannot get user from db: %v", err)
+		return false
+	}
+
+	if login != "" {
+		return true
+	} else {
+		return false
+	}
+}
+
 //func Upload(filename *FileName) {
 //	log.Printf("%s upload started", filename.FileName())
 //

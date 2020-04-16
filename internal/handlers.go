@@ -31,7 +31,19 @@ func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+	var user User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("%s, %s", user.Login, user.Email)
+
+	if IsUserLoginOrEmailExists(&user) {
+		w.WriteHeader(http.StatusCreated)
+	}
+
+	w.WriteHeader(http.StatusNotAcceptable)
 }
 
 func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
