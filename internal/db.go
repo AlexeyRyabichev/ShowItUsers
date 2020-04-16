@@ -22,6 +22,24 @@ func (wc *WriteCounter) Write(p []byte) (int, error) {
 	return n, nil
 }
 
+func GetUserInfo(user *User) User {
+	connStr := fmt.Sprintf("user=%s password=%s dbname=showit sslmode=disable", username, password)
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Printf("%v", err)
+	}
+	defer db.Close()
+
+	var userFromDB string
+	err = db.QueryRow(fmt.Sprintf(`select (login, first_name, last_name, total_series, total_seen_episodes, total_unseen_episodes, total_seen_movies, total_unseen_movies, total_time_spent, year_activity) from users where login='%s'`, user.Login)).Scan(&userFromDB)
+	//err = db.QueryRow(fmt.Sprintf(`select (login, first_name, last_name, total_series, total_seen_episodes, total_unseen_episodes, total_seen_movies, total_unseen_movies, total_time_spent, year_activity) from users where login='%s' and password='%s'`, user.Login, user.FirstName, user.LastName, user.TotalSeries, user.TotalSeenEpisodes, user.TotalUnseenEpisodes, user.TotalSeenMovies, user.TotalUnseenMovies, user.TotalTimeSpent, user.YearActivity)).Scan(&userFromDB)
+	if err != nil {
+		log.Printf("cannot get user from db: %v", err)
+		return User{}
+	}
+	return User{}
+}
+
 func IsUserExists(user *User) bool {
 	connStr := fmt.Sprintf("user=%s password=%s dbname=showit sslmode=disable", username, password)
 	db, err := sql.Open("postgres", connStr)

@@ -61,7 +61,15 @@ func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("%v", user)
+	if !IsUserExists(&user) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	if GetUserInfo(&user){
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	w.WriteHeader(http.StatusOK)
 }
