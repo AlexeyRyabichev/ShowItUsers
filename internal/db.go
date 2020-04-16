@@ -6,7 +6,7 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"os"
-	"path/filepath"
+	//"path/filepath"
 )
 
 var username = os.Getenv("DBUSER")
@@ -31,9 +31,10 @@ func IsUserExists(user *User) bool {
 	defer db.Close()
 
 	var login string
-	err = db.QueryRow(`select login from users where login=? and password=?`, user.Login, user.Password).Scan(&login)
+	err = db.QueryRow(fmt.Sprintf(`select login from users where login='%s' and password='%s'`, user.Login, user.Password)).Scan(&login)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("cannot get user from db: %v", err)
+		return false
 	}
 
 	if login != "" {
