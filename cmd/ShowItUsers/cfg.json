@@ -1,18 +1,18 @@
 {
   "gateways": [
     {
-      "name": "Post user login info",
+      "name": "Get user login info",
       "method": "POST",
-      "path": "/"
+      "path": "/login"
     },
     {
-      "name": "Get user login info",
-      "method": "GET",
-      "path": "/"
+      "name": "Register user login info",
+      "method": "POST",
+      "path": "/signup"
     },
     {
       "name": "Get user account info",
-      "method": "GET",
+      "method": "POST",
       "path": "/info"
     }
   ],
