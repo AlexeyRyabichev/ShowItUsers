@@ -25,9 +25,11 @@ func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 
 	if IsUserExists(&user) {
 		w.WriteHeader(http.StatusOK)
+		return
 	}
 
 	w.WriteHeader(http.StatusUnauthorized)
+	return
 }
 
 func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
@@ -41,13 +43,16 @@ func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 
 	if IsUserLoginOrEmailExists(&user) {
 		w.WriteHeader(http.StatusNotAcceptable)
+		return
 	}
 
 	if InsertUser(&user) {
 		w.WriteHeader(http.StatusCreated)
+		return
 	}
 
 	w.WriteHeader(http.StatusInternalServerError)
+	return
 }
 
 func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
