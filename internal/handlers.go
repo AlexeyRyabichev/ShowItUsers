@@ -14,7 +14,7 @@ func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 	//	return
 	//}
 
-	var user User
+	var user UserHttp
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -32,7 +32,7 @@ func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user UserHttp
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -55,11 +55,13 @@ func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
-	var user User
+	var user UserHttp
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	//InsertUserFull(&user)
 
 	if !IsUserExists(&user) {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -67,7 +69,7 @@ func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userFromDB := GetUserInfo(&user)
-	if userFromDB.Login != "" {
+	if userFromDB.Login == "" {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -79,6 +81,7 @@ func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(js)
 }
