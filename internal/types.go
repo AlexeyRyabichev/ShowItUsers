@@ -45,14 +45,6 @@ type UserDB struct {
 	TotalUnseenMovies   int    `db:"total_unseen_movies"`
 	TotalTimeSpent      string `db:"total_time_spent"`
 	YearActivity        string `db:"year_activity"`
-
-	//"total_seen_episodes": 2603,
-	//"total_unseen_episodes": 36,
-	//"total_seen_movies": 205,
-	//"total_unseen_movies": 36,
-
-	//MoviesViewed  []Movie `json:"movies_viewed"`
-	//MoviesToWatch []Movie `json:"movies_to_watch"`
 }
 
 type TimeSpent struct {
@@ -70,4 +62,38 @@ type MonthActivity struct {
 type Movie struct {
 	Id    string `json:"id"`
 	Score string `json:"score"`
+}
+
+func HTTPtoDB(http UserHttp) UserDB {
+	return UserDB{
+		Login:               http.Login,
+		Email:               http.Email,
+		Password:            http.Password,
+		FirstName:           http.FirstName,
+		LastName:            http.LastName,
+		TotalSeries:         http.TotalSeries,
+		TotalSeenEpisodes:   http.TotalSeenEpisodes,
+		TotalUnseenEpisodes: http.TotalUnseenEpisodes,
+		TotalSeenMovies:     http.TotalSeenMovies,
+		TotalUnseenMovies:   http.TotalUnseenMovies,
+		TotalTimeSpent:      string(http.TotalTimeSpent),
+		YearActivity:        string(http.YearActivity),
+	}
+}
+
+func DBtoHTTP(db UserDB) UserHttp {
+	return UserHttp{
+		Login:               db.Login,
+		Email:               db.Email,
+		Password:            db.Password,
+		FirstName:           db.FirstName,
+		LastName:            db.LastName,
+		TotalSeries:         db.TotalSeries,
+		TotalSeenEpisodes:   db.TotalSeenEpisodes,
+		TotalUnseenEpisodes: db.TotalUnseenEpisodes,
+		TotalSeenMovies:     db.TotalSeenMovies,
+		TotalUnseenMovies:   db.TotalUnseenMovies,
+		TotalTimeSpent:      []byte(db.TotalTimeSpent),
+		YearActivity:        []byte(db.YearActivity),
+	}
 }

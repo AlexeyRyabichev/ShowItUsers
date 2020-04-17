@@ -16,11 +16,12 @@ func (rt *Router) PostUserLogin(w http.ResponseWriter, r *http.Request) {
 
 	var user UserHttp
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		log.Printf("ERR\t%v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("%s, %s", user.Login, user.Password)
+	log.Printf("REQ\tLOGIN\t{%s, %s}", user.Login, user.Password)
 
 	if IsUserExists(&user) {
 		w.WriteHeader(http.StatusOK)
@@ -38,7 +39,7 @@ func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("%s, %s", user.Login, user.Email)
+	log.Printf("REQ\tSIGNUP\t{%s, %s}", user.Login, user.Email)
 
 	if IsUserLoginOrEmailExists(&user) {
 		w.WriteHeader(http.StatusNotAcceptable)
@@ -57,11 +58,12 @@ func (rt *Router) PostUserSignup(w http.ResponseWriter, r *http.Request) {
 func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 	var user UserHttp
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		log.Printf("ERR\t%v", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	//InsertUserFull(&user)
+	log.Printf("REQ \tINFO\t{%s, %s}", user.Login, user.Password)
 
 	if !IsUserExists(&user) {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -75,13 +77,22 @@ func (rt *Router) PostUserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	userFromDB.Password = ""
-	js, err := json.Marshal(userFromDB)
+	type ResUser struct {
+		AccountInfo UserHttp `json:"account_info"`
+	}
+
+	js, err := json.Marshal(ResUser{AccountInfo: userFromDB})
 	if err != nil {
+		log.Printf("ERR\t%v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	//w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
+	if bytes, err := w.Write(js); err != nil {
+		log.Printf("ERR\t%v", err)
+		http.Error(w, "ERR\tcannot write json to response: "+err.Error(), http.StatusInternalServerError)
+	} else {
+		log.Printf("RESP\tINFO\twritten %d bytes in response", bytes)
+	}
 }
