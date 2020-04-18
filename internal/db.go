@@ -84,8 +84,13 @@ func InsertUser(user *UserHttp) bool {
 	}
 	defer db.Close()
 
-	query := fmt.Sprintf("insert into users (login, email, password, first_name, last_name) values ('%s', '%s', '%s', '%s', '%s')", user.Login, user.Email, user.Password, user.FirstName, user.LastName)
-	result, err := db.Exec(query)
+	//query := fmt.Sprintf("insert into users (login, email, password, first_name, last_name) values ('%s', '%s', '%s', '%s', '%s')", user.Login, user.Email, user.Password, user.FirstName, user.LastName)
+	//query := "INSERT INTO users (login, email, password, first_name, last_name, total_series, total_seen_episodes, total_unseen_episodes, total_seen_movies, total_unseen_movies, total_time_spent, year_activity) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, '{}', '[]')"
+	result, err := db.Exec("INSERT INTO users (login, email, password, first_name, last_name," +
+							" total_series, total_seen_episodes, total_unseen_episodes, total_seen_movies," +
+							" total_unseen_movies, total_time_spent, year_activity)" +
+							" VALUES ($1, $2, $3, $4, $5, 0, 0, 0, 0, 0, '{}', '[]')",
+							user.Login, user.Email, user.Password, user.FirstName, user.LastName)
 	if err != nil {
 		log.Printf("ERR\t%v", err)
 		return false
@@ -97,7 +102,35 @@ func InsertUser(user *UserHttp) bool {
 		return false
 	}
 
-	log.Printf("user %s inserted, rows affected: %d", user.Login, rows)
+	log.Printf("user %s inserted into users, rows affected: %d", user.Login, rows)
+
+	result, err = db.Exec("INSERT INTO movies (login, seen_movies, unseen_movies) VALUES ($1, '{}', '{}')", user.Login)
+	if err != nil {
+		log.Printf("ERR\t%v", err)
+		return false
+	}
+
+	rows, err = result.RowsAffected()
+	if err != nil {
+		log.Printf("%v", err)
+		return false
+	}
+
+	log.Printf("user %s inserted into movies, rows affected: %d", user.Login, rows)
+
+	result, err = db.Exec("INSERT INTO tvshows (login, watchlist) VALUES ($1, '{}')", user.Login)
+	if err != nil {
+		log.Printf("ERR\t%v", err)
+		return false
+	}
+
+	rows, err = result.RowsAffected()
+	if err != nil {
+		log.Printf("%v", err)
+		return false
+	}
+
+	log.Printf("user %s inserted into tvshows, rows affected: %d", user.Login, rows)
 	return true
 }
 
